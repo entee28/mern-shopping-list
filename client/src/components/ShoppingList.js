@@ -1,44 +1,34 @@
-import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-const uuid = require('uuid')
+import { connect } from 'react-redux'
+import { getItems, deleteItem } from '../actions/itemActions';
+import PropTypes from 'prop-types'
 
+const ShoppingList = (props) => {
+    useEffect(() => {
+        props.getItems();
+    }, [])
 
-const ShoppingList = () => {
-    const [items, setItems] = useState(
-        [
-            { id: uuid.v4(), name: 'Eggs' },
-            { id: uuid.v4(), name: 'Milk' },
-            { id: uuid.v4(), name: 'Steak' },
-            { id: uuid.v4(), name: 'Water' },
-        ]
-    );
+    const { items } = props.item;
+
+    const onDeleteClick = id => {
+        props.deleteItem(id);
+    }
+
 
     return (
         <div className='slist'>
             <div className='slist-container'>
-                <Button color="dark"
-                    style={{ marginBottom: '2rem' }}
-                    onClick={() => {
-                        const name = prompt('Enter Item');
-                        if (name) {
-                            setItems([...items, { id: uuid.v4(), name }])
-                        }
-                    }}>
-                    Add Item
-                </Button>
-
                 <ListGroup>
                     <TransitionGroup className='shopping-list'>
-                        {items.map(({id, name}) => (
+                        {items.map(({ id, name }) => (
                             <CSSTransition key={id} timeout={500} classNames='fade'>
                                 <ListGroupItem>
                                     <Button className='remove-btn'
-                                    color='danger'
-                                    size='sm'
-                                    onClick={() => {
-                                        setItems(items.filter(item => item.id !== id))
-                                    }}>&times;</Button>
+                                        color='danger'
+                                        size='sm'
+                                        onClick={() => onDeleteClick(id)}>&times;</Button>
                                     {name}
                                 </ListGroupItem>
                             </CSSTransition>
@@ -50,4 +40,13 @@ const ShoppingList = () => {
     )
 }
 
-export default ShoppingList
+ShoppingList.propTypes = {
+    getItems: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    item: state.item
+});
+
+export default connect(mapStateToProps, { getItems, deleteItem })(ShoppingList)
