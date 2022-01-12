@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { addItem } from '../actions/itemActions';
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
-const uuid = require('uuid')
-
 const ItemModal = (props) => {
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState('');
@@ -17,7 +15,6 @@ const ItemModal = (props) => {
         e.preventDefault();
 
         const newItem = {
-            id: uuid.v4(),
             name: name
         }
 
