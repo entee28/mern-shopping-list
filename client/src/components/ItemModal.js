@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { addItem } from '../actions/itemActions';
+import PropTypes from 'prop-types'
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 const ItemModal = (props) => {
@@ -28,11 +29,12 @@ const ItemModal = (props) => {
         <div>
             <div className='slist'>
                 <div className='slist-container'>
-                    <Button
+                    {props.isAuthenticated ? <Button
                         color='dark'
                         style={{ marginBottom: '2rem' }}
                         onClick={toggle}
-                    >Add Item</Button>
+                    >Add Item</Button> : <h4 className='mb-3 ml-4'>Please login first</h4>}
+
                 </div>
             </div>
 
@@ -52,9 +54,9 @@ const ItemModal = (props) => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)} />
                             <Button
-                            color='dark'
-                            style={{marginTop: '2rem'}}
-                            block>
+                                color='dark'
+                                style={{ marginTop: '2rem' }}
+                                block>
                                 Add Item
                             </Button>
                         </FormGroup>
@@ -65,8 +67,13 @@ const ItemModal = (props) => {
     )
 }
 
+ItemModal.propTypes = {
+    isAuthenticated: PropTypes.bool,
+}
+
 const mapStateToProps = (state) => ({
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { addItem })(ItemModal)
