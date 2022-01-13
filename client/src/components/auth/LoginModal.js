@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { register } from '../../actions/authActions'
+import { login } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
 import { Alert, Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalHeader, NavLink } from 'reactstrap';
 
-const RegisterModal = (props) => {
+const LoginModal = (props) => {
     const [openModal, setOpenModal] = useState(false);
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState(null);
@@ -32,7 +31,7 @@ const RegisterModal = (props) => {
 
     useEffect(() => {
         if (prevError !== error) {
-            if (error.id === 'REGISTER_FAIL') {
+            if (error.id === 'LOGIN_FAIL') {
                 setMsg(error.msg.msg)
             } else {
                 setMsg(null);
@@ -41,7 +40,7 @@ const RegisterModal = (props) => {
 
         // If authenticated, close modal
         if (openModal) {
-            if(isAuthenticated) {
+            if (isAuthenticated) {
                 toggle();
             }
         }
@@ -50,24 +49,17 @@ const RegisterModal = (props) => {
     const onSubmit = e => {
         e.preventDefault();
 
-        // Create user object
-        const newUser = {
-            name,
-            email,
-            password
-        };
+        const user = {email, password}
 
-        // Attempt to register
-        props.register(newUser);
-
-
+        //Attempt to login
+        props.login(user)
     }
 
     return (
         <div>
             <div className='slist'>
                 <div className='slist-container'>
-                    <NavLink onClick={toggle} href='#'>Register</NavLink>
+                    <NavLink onClick={toggle} href='#'>Login</NavLink>
                 </div>
             </div>
 
@@ -75,19 +67,11 @@ const RegisterModal = (props) => {
                 isOpen={openModal}
                 toggle={toggle}
             >
-                <ModalHeader toggle={toggle}>Register</ModalHeader>
+                <ModalHeader toggle={toggle}>Login</ModalHeader>
                 <ModalBody>
                     {msg ? (<Alert color='danger'>{msg}</Alert>) : null}
                     <Form onSubmit={(e) => onSubmit(e)}>
                         <FormGroup>
-                            <Label for='name'>Name</Label>
-                            <Input type='text'
-                                name='name'
-                                id='name'
-                                placeholder='Name'
-                                value={name}
-                                className='mb-3'
-                                onChange={(e) => setName(e.target.value)} />
                             <Label for='email'>Email</Label>
                             <Input type='email'
                                 name='email'
@@ -108,7 +92,7 @@ const RegisterModal = (props) => {
                                 color='dark'
                                 style={{ marginTop: '2rem' }}
                                 block>
-                                Register
+                                Login
                             </Button>
                         </FormGroup>
                     </Form>
@@ -118,10 +102,10 @@ const RegisterModal = (props) => {
     )
 }
 
-RegisterModal.propTypes = {
+LoginModal.propTypes = {
     isAuthenticated: PropTypes.bool,
     error: PropTypes.object.isRequired,
-    register: PropTypes.func.isRequired,
+    login: PropTypes.func.isRequired,
     clearErrors: PropTypes.func.isRequired
 }
 
@@ -130,4 +114,4 @@ const mapStateToProps = (state) => ({
     error: state.error,
 });
 
-export default connect(mapStateToProps, { register, clearErrors })(RegisterModal)
+export default connect(mapStateToProps, { login, clearErrors })(LoginModal)
