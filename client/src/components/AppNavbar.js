@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap'
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem } from 'reactstrap'
+import Logout from './auth/Logout';
+import RegisterModal from './auth/RegisterModal';
 
 const AppNavbar = () => {
     const [isOpen, setOpen] = useState(false);
@@ -16,7 +18,10 @@ const AppNavbar = () => {
                     <Collapse navbar isOpen={isOpen}>
                         <Nav className='ms-auto' navbar>
                             <NavItem>
-                                <NavLink href='https://github.com/entee28'>Github</NavLink>
+                                <RegisterModal></RegisterModal>
+                            </NavItem>
+                            <NavItem>
+                                <Logout />
                             </NavItem>
                         </Nav>
                     </Collapse>

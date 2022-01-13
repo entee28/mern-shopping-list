@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 // User Model
 const User = require('../../models/User');
 
-// @route   POST api/user
+// @route   POST api/users
 // @desc    Register new user
 // @access  Public
 router.post('/', (req, res) => {
